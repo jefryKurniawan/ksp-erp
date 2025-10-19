@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  url      = env("DATABASE_URL")
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Model Anggota
+model Member {
+  id        Int      @id @default(autoincrement())
+  name      String
+  address   String?  @db.Text
+  phone     String?  @unique
+  email     String?  @unique
+  status    String   @default("active") // 'active' atau 'inactive'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi
+  savingsAccount SavingsAccount? // Relasi 1:1
+  loans          Loan[] // Relasi 1:N
+
+  @@map("members") // Nama tabel di DB
+}
+
+// 2. Model Rekening Simpanan
+model SavingsAccount {
+  id            Int      @id @default(autoincrement())
+  memberId      Int      @unique // Kunci untuk relasi 1:1
+  accountNumber String   @unique
+  balance       Decimal  @default(0.00) @db.Decimal(15, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relasi
+  member       Member               @relation(fields: [memberId], references: [id])
+  transactions SavingsTransaction[]
+
+  @@map("savings_accounts")
+}
+
+// 3. Model Transaksi Simpanan
+model SavingsTransaction {
+  id          Int      @id @default(autoincrement())
+  accountId   Int
+  amount      Decimal  @db.Decimal(15, 2)
+  type        String // 'deposit', 'withdrawal', 'interest'
+  date        DateTime @db.Date
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  // Relasi
+  account SavingsAccount @relation(fields: [accountId], references: [id])
+
+  @@map("savings_transactions")
+}
+
+// 4. Model Pinjaman
+model Loan {
+  id               Int       @id @default(autoincrement())
+  memberId         Int
+  amount           Decimal   @db.Decimal(15, 2)
+  interestRate     Decimal   @db.Decimal(5, 2) // Suku bunga (misal: 1.5 untuk 1.5%)
+  termMonths       Int       @db.SmallInt
+  status           String    @default("pending") // 'pending', 'approved', 'disbursed', 'repaid'
+  approvedDate     DateTime? @db.Date
+  disbursementDate DateTime? @db.Date
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relasi
+  member     Member          @relation(fields: [memberId], references: [id])
+  repayments LoanRepayment[]
+
+  @@map("loans")
+}
+
+// 5. Model Angsuran Pinjaman
+model LoanRepayment {
+  id         Int       @id @default(autoincrement())
+  loanId     Int
+  dueDate    DateTime  @db.Date
+  amountDue  Decimal   @db.Decimal(15, 2)
+  amountPaid Decimal   @default(0.00) @db.Decimal(15, 2)
+  paidDate   DateTime? @db.Date
+  status     String    @default("pending") // 'pending', 'paid'
+  createdAt  DateTime  @default(now())
+
+  // Relasi
+  loan Loan @relation(fields: [loanId], references: [id])
+
+  @@map("loan_repayments")
+}
+
+// 6. Model Pengguna Sistem
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String // Akan di-hash
+  role      String   @default("staff") // 'admin', 'staff'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
