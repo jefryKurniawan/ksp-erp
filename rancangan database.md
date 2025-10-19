@@ -284,3 +284,5 @@ CMD ["php", "artisan", "serve", "--host=0.0.0.0"]
 5. **Modular**: Setiap modul terpisah sehingga mudah dikembangkan ke fitur tambahan nanti (seperti manajemen saham)
 
 Sistem ini memenuhi kebutuhan dasar KSP mikro/menengah dan dapat dikembangkan lebih lanjut sesuai kebutuhan spesifik koperasi.
+
+## Development
