@@ -15,9 +15,18 @@ export class MembersService {
   }
 
   async findAll() {
-    return this.prisma.member.findMany({
-      orderBy: { name: 'asc' },
-    });
+    try {
+      console.log('[DEBUG] Fetching all members');
+      const members = await this.prisma.member.findMany({
+        orderBy: { name: 'asc' },
+      });
+      console.log(`[DEBUG] Found ${members.length} members`);
+      return members;
+    } catch (error) {
+      console.error('[ERROR] Fetching members:', error);
+      // Return empty array untuk prevent error
+      return [];
+    }
   }
 
   async findOne(id: number) {

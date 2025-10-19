@@ -6,6 +6,7 @@ import { Controller,
   Param,
   Delete,
   ParseIntPipe,
+  Render
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './members/dto/create-member.dto';
@@ -15,14 +16,21 @@ import { UpdateMemberDto } from './members/dto/update-member.dto';
 export class MembersController {
     constructor(private readonly membersService: MembersService) {}
 
+    
     @Post()
     async create(@Body() createMemberDto: CreateMemberDto) {
         return this.membersService.create(createMemberDto);
     }
     
     @Get()
+    @Render('pages/members/index')
     async findAll() {
-        return this.membersService.findAll();
+        const members = await this.membersService.findAll();
+
+        return {
+            title: 'Daftar Anggota Koperasi',
+            members: members,
+        };
     }
 
     @Get(':id')

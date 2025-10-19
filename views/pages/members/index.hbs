@@ -1,0 +1,290 @@
+{{!-- {{! views/pages/members/index.hbs }}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">{{title}}</h1>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Data Anggota</h5>
+                <button class="btn btn-primary btn-sm" id="addMemberBtn">Tambah Anggota</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="membersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Telepon</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each members}}
+                            <tr>
+                                <td>{{this.id}}</td>
+                                <td>{{this.name}}</td>
+                                <td>{{this.email}}</td>
+                                <td>{{this.phone}}</td>
+                                <td>
+                                    <span class="badge {{#if (eq this.status 'active')}}bg-success{{else}}bg-danger{{/if}}">
+                                        {{this.status}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/members/{{this.id}}" class="btn btn-info btn-sm">Detail</a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Add Member -->
+<div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Anggota Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addMemberForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Telepon</label>
+                        <input type="text" class="form-control" id="phone" name="phone">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Alamat</label>
+                        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="saveMemberBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div> --}}
+
+{{!-- <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{title}}</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+        Tambah Anggota
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="membersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Telepon</th>
+                        <th>Alamat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each members}}
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.name}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phone}}</td>
+                        <td>{{this.address}}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="editMember({{this.id}})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteMember({{this.id}})">Hapus</button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Anggota -->
+<div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Anggota Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addMemberForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telepon</label>
+                        <input type="text" class="form-control" name="phone">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat</label>
+                        <textarea class="form-control" name="address" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// JavaScript untuk handle form dan AJAX
+$(document).ready(function() {
+    // Handle form tambah anggota
+    $('#addMemberForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            name: $('input[name="name"]').val(),
+            email: $('input[name="email"]').val(),
+            phone: $('input[name="phone"]').val(),
+            address: $('textarea[name="address"]').val()
+        };
+
+        $.ajax({
+            url: '/members',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                $('#addMemberModal').modal('hide');
+                location.reload(); // Refresh halaman
+            },
+            error: function(xhr) {
+                alert('Error: ' + xhr.responseJSON.message);
+            }
+        });
+    });
+});
+
+function editMember(id) {
+    // Implementasi edit member
+    alert('Edit member: ' + id);
+}
+
+function deleteMember(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus anggota ini?')) {
+        $.ajax({
+            url: '/members/' + id,
+            method: 'DELETE',
+            success: function(response) {
+                location.reload(); // Refresh halaman
+            },
+            error: function(xhr) {
+                alert('Error: ' + xhr.responseJSON.message);
+            }
+        });
+    }
+}
+</script> --}}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Members</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-primary">{{title}}</h1>
+        
+        <div class="alert alert-info">
+            <strong>Debug Info:</strong> Template berhasil di-load!
+        </div>
+
+        <h3>Data Members ({{members.length}}):</h3>
+        
+        {{#if members.length}}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Telepon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each members}}
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.name}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phone}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            <div class="alert alert-warning">
+                Tidak ada data members yang ditemukan.
+            </div>
+            
+            {{!-- Test dengan data dummy --}}
+            <h4>Test Data (Dummy):</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Test User 1</td>
+                        <td>test1@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Test User 2</td>
+                        <td>test2@example.com</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{/if}}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        console.log('Members page loaded successfully!');
+        console.log('Members data:', {{json members}});
+    </script>
+</body>
+</html>
