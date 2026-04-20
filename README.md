@@ -1,226 +1,573 @@
-## 📦 1. Push ke GitHub (Step-by-Step)
+# KSP ERP Modern
 
-Jalankan ini di terminal:
+Sistem manajemen koperasi simpan pinjaman berbasis web yang aman, modern, dan mudah digunakan. Dibangun khusus untuk kebutuhan KSP di Indonesia dengan fokus pada keamanan data keuangan.
 
-```bash
-# 1. Masuk ke folder project
-cd ~/Documents/Koperasi/ksp/ksp-erp-modern
+---
 
-# 2. Init git (jika belum)
-git init
+## Mengapa Menggunakan Deno untuk Sistem Keuangan?
 
-# 3. Buat .gitignore biar gak upload node_modules/cache
-echo "node_modules/
-.denopkg/
-.env
-*.env
-.DS_Store" > .gitignore
+Untuk sistem yang mengelola data keuangan seperti KSP, keamanan adalah prioritas utama. Berikut alasan teknis mengapa Deno dipilih:
 
-# 4. Stage & Commit
-git add .
-git commit -m "feat: init KSP ERP Modern (Deno + Hono + Fresh + Tailwind + Supabase) 🚀"
+### 🔐 Keamanan Default (Security by Default)
 
-# 5. Buat repo di GitHub dulu (manual via web), lalu connect:
-git remote add origin https://github.com/USERNAME_KAMU/ksp-erp-modern.git
+| Fitur                 | Manfaat untuk KSP                                                                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Permission System** | Aplikasi hanya bisa akses file/network yang diizinkan secara eksplisit via flag `--allow-read`, `--allow-net`. Mencegah akses tidak sah ke data sensitif. |
+| **No node_modules**   | Tidak ada dependency tersembunyi yang bisa menjadi celah keamanan. Semua import transparan via URL.                                                       |
+| **TypeScript Native** | Type safety mengurangi bug yang bisa menyebabkan kesalahan perhitungan keuangan.                                                                          |
+| **Sandboxed Runtime** | Kode berjalan dalam environment terisolasi, meminimalkan risiko exploit.                                                                                  |
+| **Built-in TLS**      | Semua koneksi network terenkripsi secara default.                                                                                                         |
 
-# 6. Push ke main branch
-git branch -M main
-git push -u origin main
+### 📊 Relevansi untuk KSP/Finance
+
+```
+Data Anggota + Transaksi Keuangan + Laporan Keuangan
+                    ↓
+           Butuh Proteksi Ekstra
+                    ↓
+    Deno: Permission flags + Type Safety + No eval()
+                    ↓
+           Risiko Kebocoran Data ↓
 ```
 
-✅ **Repo GitHub siap!** Sekarang tinggal taruh README di bawah ke file `README.md` di root project.
+### Perbandingan Singkat
 
----
-
-## 📝 2. `README.md` (Copy-Paste Ready)
-
-```markdown
-# 🏦 KSP ERP Modern
-
-> _Sistem Manajemen Koperasi Simpan Pinjaman yang kekinian, fast af, dan scalable!_ 🚀✨  
-> Dibuat dengan ❤️ buat anak magetan & seluruh KSP se-Indonesia.
-
----
-
-## 🤖 Tech Stack
-
-| Layer                | Tech                  | Kenapa dipake?                                              |
-| -------------------- | --------------------- | ----------------------------------------------------------- |
-| 🟦 **Runtime**       | Deno 2.x              | No Node.js, secure by default, TypeScript native, fast boot |
-| 🔥 **Backend**       | Hono.js               | Lightweight, blazing routing, Zod validation built-in       |
-| 🍋 **Frontend**      | Fresh + Preact        | Islands architecture, SSR + CSR hybrid, zero build step     |
-| 🎨 **Styling**       | Tailwind CSS v3       | Utility-first, dark mode ready, responsive af               |
-| 🗄️ **Database**      | Supabase (PostgreSQL) | Managed, free tier, real-time ready                         |
-| **ORM**              | Drizzle ORM           | Type-safe, lightweight, query builder yang intuitif         |
-| 📱 **Notifications** | Fonnte WhatsApp API   | Gratis 100 msg/hari, auto-reminder H-7/H-3/Overdue          |
-| ✅ **Validation**    | Zod                   | Runtime type safety, error message yang readable            |
-
-> 💡 _Note: Awalnya niat pake SvelteKit, tapi karena Deno + Vite compatibility masih "beta vibes", kita switch ke Fresh (Preact) yang 100% Deno-native & production-ready. Same vibe, better performance._ 🧠
-
----
-
-## ✨ Features (MVP)
-
-- 👥 **Manajemen Anggota** → CRUD, search real-time, filter kota/status, pagination
-- 💾 **Simpanan** → Pokok, Wajib, Sukarela (auto-calc total)
-- 💰 **Pinjaman** → Ajukan → Approve → Jadwal Angsuran → Bayar → Lunas
-- 📊 **Laporan Real-time** → Dashboard stats, export CSV, filter dinamis
-- 🔔 **Notifikasi WhatsApp** → Auto-reminder H-7, H-3, H-0, & Overdue (contextual template)
-- 🌓 **Dark/Light Mode** → Seamless switch, localStorage persistent, no flash
-- 📱 **Responsive Layout** → Collapsible sidebar, dynamic width, mobile-first
-- 🔐 **Role-Based Access** → Karyawan vs Owner (UI conditional rendering)
-
----
-
-## 🗂️ Project Structure
+```bash
+# Node.js: Akses file/network bebas (perlu library tambahan untuk security)
+# Deno:   Harus izin eksplisit: deno run --allow-read --allow-net app.ts
 ```
 
-ksp-erp-modern/
-├── backend/ # 🟦 Deno + Hono + Drizzle
-│ ├── src/
-│ │ ├── main.ts # API routes & validation
-│ │ └── schema.ts # Database schema & relations
-│ ├── .env # Supabase URL + Fonnte Token
-│ └── deno.json
-├── frontend/ # 🍋 Fresh + Preact + Tailwind
-│ ├── islands/ # ⚡ Interactive components (useState/useEffect)
-│ ├── routes/ # 📄 Pages (SSR/static)
-│ ├── components/ # 🧩 Reusable UI (Layout, Navbar, etc)
-│ └── deno.json
-├── .gitignore
-└── README.md # 📖 You're here!
-
-````
+Untuk sistem keuangan, **"deny by default"** lebih aman daripada "allow by default".
 
 ---
 
-## ⚡ Quick Start
+## Alur Modul (Module Flow)
 
-### 1. Clone & Setup
+### 👥 Modul Anggota
+
+```
+Input Data Anggota
+       ↓
+Validasi (Zod: required fields, format phone/email)
+       ↓
+Simpan ke Database (Supabase PostgreSQL)
+       ↓
+Generate No. Anggota Otomatis: KSP-2026-XXX
+       ↓
+Auto-create Simpanan Pokok (Rp 100.000)
+       ↓
+Selesai → Anggota siap transaksi
+```
+
+**Fitur:**
+
+- ✅ Tambah/edit/hapus data anggota
+- ✅ Pencarian real-time (nama, no. anggota, telepon)
+- ✅ Filter berdasarkan kota dan status (aktif/nonaktif)
+- ✅ Nomor anggota otomatis dengan format `KSP-TAHUN-XXX`
+- ✅ Validasi NIK unik untuk mencegah duplikasi
+
+**Contoh Request:**
+
+```json
+POST /members
+{
+  "fullName": "Budi Santoso",
+  "phone": "081234567890",
+  "address": "Jl. Raya Magetan No. 10",
+  "city": "Magetan",
+  "idCard": "3520011234567890"
+}
+```
+
+**Contoh Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "memberNumber": "KSP-2026-681",
+    "fullName": "Budi Santoso",
+    "status": "active"
+  }
+}
+```
+
+---
+
+### 💾 Modul Simpanan
+
+```
+Pilih Anggota
+       ↓
+Pilih Jenis Simpanan (Pokok / Wajib / Sukarela)
+       ↓
+Input Jumlah Setoran
+       ↓
+Validasi (jumlah > 0, memberId valid)
+       ↓
+Simpan Transaksi + Update Total per Jenis
+       ↓
+Selesai → Saldo anggota terupdate
+```
+
+**Jenis Simpanan:**
+
+| Jenis        | Deskripsi                      | Frekuensi                 | Contoh           |
+| ------------ | ------------------------------ | ------------------------- | ---------------- |
+| **Pokok**    | Setoran awal saat jadi anggota | Sekali saat registrasi    | Rp 100.000       |
+| **Wajib**    | Setoran bulanan rutin anggota  | Setiap bulan              | Rp 50.000/bulan  |
+| **Sukarela** | Setoran tambahan bebas         | Kapan saja, nominal bebas | Sesuai kemampuan |
+
+**Fitur:**
+
+- ✅ Rekap total simpanan per anggota (dipisah per jenis)
+- ✅ Histori transaksi dengan tanggal dan deskripsi
+- ✅ Export data untuk laporan bulanan/tahunan
+- ✅ Validasi: tidak bisa setoran negatif, memberId harus valid
+
+**Contoh Request:**
+
+```json
+POST /savings
+{
+  "memberId": "e821a277-339f-4a4c-839d-5750432e1ff9",
+  "type": "wajib",
+  "amount": "50000",
+  "description": "Simpanan Wajib April 2026"
+}
+```
+
+---
+
+### 💰 Modul Pinjaman
+
+```
+1. Ajukan Pinjaman
+   ↓
+2. Validasi Input (memberId, principal, tenor)
+   ↓
+3. Hitung Bunga & Total (Flat Rate)
+   ↓
+4. Generate Jadwal Angsuran (12 bulan default)
+   ↓
+5. Status: "pending" → Menunggu approval
+   ↓
+6. Admin Approve → Status: "approved" + Aktifkan angsuran
+   ↓
+7. Anggota Bayar Angsuran → Update remaining balance
+   ↓
+8. Semua angsuran lunas → Status: "paid"
+```
+
+**Perhitungan Bunga (Flat Rate):**
+
+```
+Rumus:
+Total = Pokok + (Pokok × Bunga% × Tenor/12)
+Angsuran/Bulan = Total ÷ Tenor
+
+Contoh:
+Pokok: Rp 5.000.000
+Bunga: 12% per tahun
+Tenor: 12 bulan
+
+Total Bunga = 5.000.000 × 12% × 12/12 = 600.000
+Total Pinjaman = 5.000.000 + 600.000 = 5.600.000
+Angsuran/Bulan = 5.600.000 ÷ 12 = 466.667
+```
+
+**Status Pinjaman:**
+
+| Status     | Deskripsi                | Aksi yang Tersedia           |
+| ---------- | ------------------------ | ---------------------------- |
+| `pending`  | Menunggu approval admin  | Approve, Reject              |
+| `approved` | Aktif, angsuran berjalan | Bayar angsuran, Lihat jadwal |
+| `paid`     | Semua angsuran lunas     | Lihat histori, Ajukan baru   |
+
+**Fitur:**
+
+- ✅ Approval workflow dengan modal konfirmasi
+- ✅ Jadwal angsuran otomatis digenerate saat approve
+- ✅ Pembayaran per angsuran dengan update sisa pinjaman real-time
+- ✅ Notifikasi WhatsApp untuk reminder jatuh tempo
+- ✅ Validasi: tenor 1-60 bulan, bunga 0-100%, principal > 0
+
+**Contoh Request:**
+
+```json
+POST /loans
+{
+  "memberId": "e821a277-339f-4a4c-839d-5750432e1ff9",
+  "principal": "5000000",
+  "interestRate": "12.00",
+  "tenorMonths": 12
+}
+```
+
+---
+
+### 🔔 Modul Notifikasi WhatsApp
+
+```
+Trigger Event:
+├─ Pinjaman Disetujui → Kirim template "approval"
+├─ H-7 Jatuh Tempo → Kirim template "reminder_h7"
+├─ H-3 Jatuh Tempo → Kirim template "reminder_h3"
+├─ Hari-H Jatuh Tempo → Kirim template "reminder_h0"
+└─ Overdue (telat bayar) → Kirim template "overdue"
+       ↓
+Pilih Template Pesan Sesuai Trigger
+       ↓
+Format No. HP: 08xx → 628xx (standar WhatsApp API)
+       ↓
+Kirim via Fonnte API
+       ↓
+Jika API gagal → Fallback ke wa.me (buka WhatsApp Web)
+       ↓
+Log pengiriman untuk tracking
+```
+
+**Template Pesan:**
+
+| Trigger      | Contoh Pesan                                                                                                                                        |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Approval** | `🎉 Pinjaman Disetujui! Halo Budi, pinjaman PJM-2026-820 senilai Rp 5.600.000 telah disetujui. Angsuran: Rp 466.667/bulan. Cek jadwal di aplikasi.` |
+| **H-7**      | `🔔 Pengingat: Angsuran Anda jatuh tempo dalam 7 hari (20 Mei 2026). Jumlah: Rp 466.667. Silakan siapkan pembayaran.`                               |
+| **H-3**      | `⏰ Segera Bayar: Angsuran jatuh tempo dalam 3 hari. Hindari denda keterlambatan. Hubungi admin jika ada kendala.`                                  |
+| **Overdue**  | `⚠️ PERINGATAN: Angsuran Anda terlambat 3 hari. Segera bayar Rp 466.667 untuk hindari denda. Hubungi: (0351) 123456.`                               |
+
+**Fitur:**
+
+- ✅ 4 template pesan berbeda sesuai urgensi
+- ✅ Format phone otomatis (08xx → 628xx)
+- ✅ Fallback ke `wa.me` jika API limit/error
+- ✅ Button contextual di UI: 🔴 WA Overdue / 🟠 WA Urgent / 🟢 WA Regular
+- ✅ Log pengiriman untuk audit trail
+
+---
+
+### 📊 Modul Laporan
+
+```
+Pilih Jenis Laporan
+       ↓
+Apply Filter (opsional: tanggal, status, anggota)
+       ↓
+Query Database dengan Aggregation
+       ↓
+Format Response untuk Frontend
+       ↓
+Tampilkan di UI / Export ke CSV
+```
+
+**Jenis Laporan:**
+
+1. **Dashboard Stats** (`GET /reports/dashboard`)
+   - Total anggota aktif
+   - Total simpanan seluruh anggota
+   - Total pinjaman yang telah disalurkan
+   - Sisa pinjaman yang belum lunas
+   - Jumlah pinjaman lunas
+
+2. **Rekap Simpanan** (`GET /reports/savings-summary`)
+   - List semua anggota dengan total simpanan per jenis
+   - Grand total simpanan seluruh koperasi
+   - Filter by kota untuk laporan cabang
+
+3. **Pinjaman Aktif** (`GET /reports/loans-active`)
+   - List pinjaman dengan status approved/pending
+   - Progress angsuran per pinjaman
+   - Total pokok dan sisa tagihan
+
+**Fitur:**
+
+- ✅ Filter dinamis (tanggal, status, kota, anggota)
+- ✅ Export ke CSV (compatible dengan Excel, UTF-8 BOM)
+- ✅ Tampilan responsive untuk mobile/desktop
+- ✅ Real-time data (auto-refresh 30 detik di dashboard)
+
+**Contoh Response Dashboard:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalAnggotaAktif": 1,
+    "totalSimpanan": 450000,
+    "totalPinjamanDistribusi": 5600000,
+    "totalSisaPinjaman": 5133333.33,
+    "totalPinjamanLunas": 0
+  }
+}
+```
+
+---
+
+## Tech Stack
+
+| Komponen       | Teknologi             | Alasan Pemilihan                                                             |
+| -------------- | --------------------- | ---------------------------------------------------------------------------- |
+| **Runtime**    | Deno 2.x              | Security-first, TypeScript native, no node_modules, permission-based access  |
+| **Backend**    | Hono.js               | Lightweight (<14KB), fast routing, built-in Zod validation, Deno-native      |
+| **Frontend**   | Fresh + Preact        | Server-side rendering, islands architecture, zero build step, SEO-friendly   |
+| **Styling**    | Tailwind CSS v3       | Utility-first, dark mode support, responsive design, small bundle size       |
+| **Database**   | Supabase (PostgreSQL) | Managed service, free tier, real-time capabilities, auto-backup              |
+| **ORM**        | Drizzle ORM           | Type-safe queries, lightweight, intuitive syntax, no runtime overhead        |
+| **Validation** | Zod                   | Runtime type checking, clear error messages, schema sharing backend-frontend |
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Deno 2.x: `curl -fsSL https://deno.land/install.sh | sh`
+- Supabase account (free tier): https://supabase.com
+- Git
+
+### 1. Clone Repository
+
 ```bash
-git clone https://github.com/USERNAME_KAMU/ksp-erp-modern.git
-cd ksp-erp-modern
-````
+git clone https://github.com/jefryKurniawan/ksp-erp.git
+cd ksp-erp
+```
 
-### 2. Backend 🟦
+### 2. Setup Backend
 
 ```bash
 cd backend
-cp .env.example .env  # Copy template
-# Edit .env → isi DATABASE_URL & FONNTE_TOKEN
+
+# Copy environment template
+cp .env.example .env
+
+# Edit .env: isi DATABASE_URL dari Supabase dashboard
+# DATABASE_URL=postgresql://postgres.xxxxx:password@host:6543/postgres?pgbouncer=true
+
+# Jalankan server dengan permission flags
 deno run --allow-net --allow-env --allow-read --env-file=.env src/main.ts
 ```
 
-🔥 Backend running di `http://localhost:3000`
+✅ Backend berjalan di `http://localhost:3000`
 
-### 3. Frontend 🍋
+### 3. Setup Frontend
 
 ```bash
-cd frontend
-deno install          # Install dependencies
-deno task start       # Dev server with hot reload
+cd ../frontend
+
+# Install dependencies (first time only)
+deno install
+
+# Jalankan development server dengan hot reload
+deno task start
 ```
 
-🌐 Frontend running di `http://localhost:8000`
+✅ Frontend berjalan di `http://localhost:8000`
+
+### 4. Akses Aplikasi
+
+Buka browser: `http://localhost:8000`
+
+**Demo Credentials:**
+| Role | Email | Password | Akses |
+|------|-------|----------|-------|
+| Karyawan | `karyawan@ksp.id` | `karyawan123` | CRUD anggota, input transaksi, lihat laporan |
+| Owner | `owner@ksp.id` | `owner123` | Semua akses + approval pinjaman + setting sistem |
 
 ---
 
-## 🌍 Environment Variables
+## Environment Variables
 
-Buat file `.env` di folder `backend/`:
+File: `backend/.env`
 
 ```env
-# Supabase PostgreSQL Connection
-DATABASE_URL=postgresql://postgres.xxxxx:your_password@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+# Koneksi ke Supabase PostgreSQL
+DATABASE_URL=postgresql://postgres.xxxxx:password@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true
 
-# WhatsApp Gateway (Fonnte)
-FONNTE_TOKEN=your_fonnte_api_token_here
+# WhatsApp API (opsional, untuk notifikasi)
+FONNTE_TOKEN=your_fonnte_token_here
 ```
 
-> 🔒 Jangan commit `.env` ke GitHub! Udah di-handle `.gitignore`.
+> ⚠️ **Penting**: File `.env` tidak boleh di-commit ke repository. Sudah dikecualikan di `.gitignore`.
 
 ---
 
-## 📡 API Endpoints
+## API Reference
 
-| Method  | Endpoint                   | Deskripsi                                            |
-| ------- | -------------------------- | ---------------------------------------------------- |
-| `GET`   | `/members`                 | List semua anggota + relasi simpanan & pinjaman      |
-| `POST`  | `/members`                 | Tambah anggota baru (auto-generate `KSP-2026-XXX`)   |
-| `GET`   | `/savings/:memberId`       | Rekap simpanan per anggota                           |
-| `POST`  | `/savings`                 | Catat setoran simpanan                               |
-| `GET`   | `/loans`                   | List pinjaman + anggota + angsuran                   |
-| `POST`  | `/loans`                   | Ajukan pinjaman baru (auto-calc bunga & jadwal)      |
-| `PATCH` | `/loans/:id/approve`       | Approve pinjaman → aktifkan angsuran                 |
-| `PATCH` | `/installments/:id/pay`    | Tandai angsuran lunas → update sisa pinjaman         |
-| `GET`   | `/reports/dashboard`       | Stats: anggota aktif, total simpanan, pinjaman, sisa |
-| `GET`   | `/reports/savings-summary` | Rekap simpanan per anggota                           |
-| `GET`   | `/reports/loans-active`    | Pinjaman aktif + progress angsuran                   |
-| `POST`  | `/api/send-whatsapp`       | Kirim notifikasi WA (Fonnte / fallback wa.me)        |
+### 👥 Members
+
+| Method | Endpoint   | Deskripsi                   | Request Body                                  | Response                                                    |
+| ------ | ---------- | --------------------------- | --------------------------------------------- | ----------------------------------------------------------- |
+| GET    | `/members` | List semua anggota + relasi | -                                             | `{ success: true, data: [...] }`                            |
+| POST   | `/members` | Tambah anggota baru         | `{ fullName, phone, address, city, idCard? }` | `{ success: true, data: { memberNumber: "KSP-2026-XXX" } }` |
+
+### 💾 Savings
+
+| Method | Endpoint             | Deskripsi              | Request Body                               | Response                                                                    |
+| ------ | -------------------- | ---------------------- | ------------------------------------------ | --------------------------------------------------------------------------- |
+| GET    | `/savings/:memberId` | Rekap simpanan anggota | -                                          | `{ success: true, data: [...], totals: { pokok, wajib, sukarela, total } }` |
+| POST   | `/savings`           | Catat setoran simpanan | `{ memberId, type, amount, description? }` | `{ success: true, data: {...} }`                                            |
+
+### 💰 Loans
+
+| Method | Endpoint                | Deskripsi                          | Request Body                                         | Response                                                  |
+| ------ | ----------------------- | ---------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| GET    | `/loans`                | List pinjaman + anggota + angsuran | -                                                    | `{ success: true, data: [...] }`                          |
+| POST   | `/loans`                | Ajukan pinjaman baru               | `{ memberId, principal, interestRate, tenorMonths }` | `{ success: true, data: { loanNumber: "PJM-2026-XXX" } }` |
+| PATCH  | `/loans/:id/approve`    | Approve pinjaman                   | -                                                    | `{ success: true, data: {...} }`                          |
+| PATCH  | `/installments/:id/pay` | Tandai angsuran lunas              | `{ paidDate: "2026-04-20" }`                         | `{ success: true }`                                       |
+
+### 📊 Reports
+
+| Method | Endpoint                   | Deskripsi                  | Response                                                                                               |
+| ------ | -------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------ |
+| GET    | `/reports/dashboard`       | Stats overview             | `{ totalAnggotaAktif, totalSimpanan, totalPinjamanDistribusi, totalSisaPinjaman, totalPinjamanLunas }` |
+| GET    | `/reports/savings-summary` | Rekap simpanan per anggota | `{ data: [...], summary: { grandTotal, totalAnggota } }`                                               |
+| GET    | `/reports/loans-active`    | Pinjaman aktif + progress  | `{ data: [...], summary: { totalPokokPinjaman, totalSisaPinjaman } }`                                  |
+
+### 🔔 WhatsApp (Opsional)
+
+| Method | Endpoint             | Deskripsi           | Request Body                          |
+| ------ | -------------------- | ------------------- | ------------------------------------- |
+| POST   | `/api/send-whatsapp` | Kirim notifikasi WA | `{ phone: "628xxx", message: "..." }` |
 
 ---
 
-## Deployment Guide
+## Deployment
 
 ### Backend (Deno)
 
-```bash
-# Option 1: Deno Deploy (Gratis & Global CDN)
-deno deploy backend/src/main.ts --project ksp-erp-api
+**Option 1: Deno Deploy (Recommended)**
 
-# Option 2: VPS / Ubuntu
-sudo apt install deno
-nohup deno run --allow-net --allow-env --allow-read --env-file=.env backend/src/main.ts &
+```bash
+deno deploy backend/src/main.ts --project ksp-erp-api
+```
+
+- ✅ Gratis, global CDN, auto-HTTPS
+- ✅ Environment variables via Deno Deploy dashboard
+- ✅ Auto-scaling, no server management
+
+**Option 2: VPS / Self-hosted**
+
+```bash
+# Install Deno di server Ubuntu
+curl -fsSL https://deno.land/install.sh | sh
+
+# Jalankan dengan PM2 untuk auto-restart & monitoring
+pm2 start "deno run --allow-net --allow-env --allow-read --env-file=.env backend/src/main.ts" --name "ksp-api"
 ```
 
 ### Frontend (Fresh)
 
-```bash
-# Deno Deploy (Auto-build)
-deno deploy frontend/ --project ksp-erp-ui
+**Option 1: Deno Deploy**
 
-# Netlify / Vercel
-# Upload folder frontend/ → auto-detect Fresh framework
+```bash
+deno deploy frontend/ --project ksp-erp-ui
 ```
+
+**Option 2: Netlify / Vercel**
+
+- Upload folder `frontend/`
+- Build command: `deno task build` (jika perlu)
+- Output directory: `_site` (auto-generated by Fresh)
 
 ### Database
 
-Supabase udah managed, tinggal copy `DATABASE_URL` ke production env. Backup otomatis tiap hari. ✅
+Supabase sudah managed:
+
+- ✅ Backup otomatis harian
+- ✅ Scaling otomatis sesuai traffic
+- ✅ Dashboard untuk monitoring query & usage
+
+Cukup copy `DATABASE_URL` ke environment variable di platform deployment.
 
 ---
 
-## 🧪 Testing & QA Notes
+## Testing & Quality Assurance
 
-- ✅ Validasi input pakai Zod (backend + frontend sync)
-- ✅ Error handling global + toast/alert user-friendly
-- ✅ Dark mode konsisten di semua island & route
-- ✅ Sidebar state persistent via localStorage
-- ✅ WhatsApp fallback ke `wa.me` kalau API limit/error
-- 📝 Test flow: Login → Dashboard → Anggota → Pinjaman → Approve → Bayar → Laporan
+### Validasi Input
 
----
+- ✅ Semua endpoint backend menggunakan Zod untuk validasi request
+- ✅ Error message jelas dan user-friendly (bukan stack trace)
+- ✅ Type safety dari TypeScript mencegah bug tipe data
 
-## 🤝 Contributing
+### Error Handling
 
-Mau kolab? Pull request welcome! Ikut vibe:
+- ✅ Global error handler di backend dengan logging terstruktur
+- ✅ Frontend menampilkan alert/notifikasi yang informatif
+- ✅ Fallback mechanism untuk WhatsApp (wa.me jika API gagal)
 
-- 🧹 Clean code + TypeScript strict
-- 🎨 UI konsisten Tailwind utility
-- 📝 Commit message conventional (`feat:`, `fix:`, `chore:`)
-- 💬 Diskusi dulu di Issues kalau mau tambah fitur besar
+### Dark Mode & Responsiveness
 
----
+- ✅ Theme preference disimpan di localStorage
+- ✅ Transisi smooth tanpa flash of unstyled content
+- ✅ Layout responsive: mobile (<640px), tablet (640-1024px), desktop (>1024px)
 
-## 📜 License
+### Data Persistence
 
-MIT License. Bebas dipake buat belajar, proyek kampus, atau produksi KSP beneran. Jangan lupa kasih credit & star repo ya! 🙏✨
+- ✅ Sidebar state tersimpan agar konsisten antar halaman
+- ✅ Session login via localStorage (untuk MVP)
+- ✅ Refresh token mechanism bisa ditambahkan untuk production
 
----
+### Test Flow Manual
 
-> Dibuat dengan ☕, , & sedikit ☀️ pagi oleh **Jefry Kurniawan** • 2026  
-> _Code is poetry, but ERP is survival._ 💼📈
-
+```
+1. Login sebagai karyawan/owner
+2. Tambah anggota baru → verifikasi muncul di list + auto simpanan pokok
+3. Ajukan pinjaman untuk anggota → approve → verifikasi jadwal angsuran terbentuk
+4. Bayar 1 angsuran → verifikasi sisa pinjaman berkurang
+5. Buka reports → verifikasi data sesuai dengan transaksi
+6. Kirim notifikasi WhatsApp → verifikasi terkirim / fallback ke wa.me
 ```
 
 ---
-```
+
+## Contributing
+
+Silakan kirim pull request untuk perbaikan atau fitur baru. Guidelines:
+
+1. **Code Quality**
+   - Gunakan TypeScript strict mode (`"strict": true` di deno.json)
+   - Ikuti konvensi penamaan: camelCase untuk variable/function, PascalCase untuk component/class
+   - Tambahkan komentar untuk logic kompleks, terutama perhitungan keuangan
+
+2. **UI/UX**
+   - Gunakan utility Tailwind yang sudah ada (jangan custom CSS kecuali perlu)
+   - Pastikan dark mode konsisten di semua component
+   - Test responsive di mobile (320px) dan desktop (1440px)
+
+3. **Commit Message** (Conventional Commits)
+
+   ```
+   feat: tambah fitur export PDF laporan
+   fix: perbaiki perhitungan bunga untuk tenor < 12 bulan
+   docs: update dokumentasi API endpoint loans
+   chore: update dependency drizzle-orm ke versi 0.31
+   ```
+
+4. **Diskusi**
+   - Untuk perubahan besar, buat issue dulu untuk diskusi use case & impact
+   - Sertakan screenshot/mockup untuk perubahan UI
+   - Jelaskan testing yang sudah dilakukan
+
+---
+
+## License
+
+MIT License. Silakan digunakan untuk:
+
+- ✅ Proyek belajar/pribadi
+- ✅ Implementasi di KSP nyata (komersial/non-profit)
+- ✅ Modifikasi dan distribusi
+
+Syarat:
+
+- 📝 Tetap cantumkan credit ke original author di file yang dimodifikasi
+- ⭐ Star repository jika project ini membantu pekerjaan Anda
+
+---
+
+> Dibuat oleh **Jefry Kurniawan** • 2026  
+> Untuk Koperasi Simpan Pinjaman di Indonesia
+>
+> _"Sistem yang aman untuk mengelola keuangan bersama."_ 💼🔐
