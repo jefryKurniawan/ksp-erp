@@ -1,219 +1,226 @@
-<<<<<<< HEAD
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## 📦 1. Push ke GitHub (Step-by-Step)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-KSP-ERP adalah sistem ERP (Enterprise Resource Planning) untuk Koperasi Simpan Pinjam yang dibangun menggunakan NestJS 9 dengan runtime Fastify, ORM Prisma, database MySQL, template engine Handlebars, dan jQuery untuk interaksi front-end.
-Aplikasi ini menyediakan REST API modular untuk pengelolaan anggota, simpanan, pinjaman, dan laporan keuangan secara efisien serta terintegrasi.
-
-## Modul Utama & Submenu
-
-### 1. Manajemen Anggota
-
-Daftar Anggota – CRUD, filter status, dan pencarian.
-
-Detail Anggota – informasi pribadi, riwayat simpanan & pinjaman.
-
-Verifikasi Anggota – validasi data, aktivasi/non-aktivasi anggota.
-
-Laporan Anggota – statistik dan aktivitas anggota.
-
-### 2. Manajemen Simpanan
-
-Setor Simpanan – transaksi deposit.
-
-Tarik Simpanan – transaksi penarikan.
-
-Rekening Simpanan – riwayat dan saldo.
-
-Perhitungan Bunga – otomatis bulanan.
-
-Laporan Simpanan – per anggota dan per periode.
-
-### 3. Manajemen Pinjaman
-
-Ajukan Pinjaman – form aplikasi pinjaman.
-
-Verifikasi Pinjaman – pemeriksaan dan persetujuan.
-
-Pencairan Pinjaman – konfirmasi pencairan dana.
-
-Jadwal Angsuran – rencana pembayaran otomatis.
-
-Pencatatan Angsuran – pembayaran cicilan.
-
-Laporan Pinjaman – portofolio dan tunggakan.
-
-### 4. Laporan Keuangan
-
-Laporan Harian – transaksi simpanan dan pinjaman.
-
-Neraca Saldo – aset, kewajiban, dan ekuitas.
-
-Laporan Piutang – pinjaman aktif & tunggakan.
-
-Laporan Laba Rugi – perhitungan sederhana (MVP).
-
-### 5. Manajemen Sistem
-
-Pengaturan Pengguna – manajemen role admin/staff.
-
-Pengaturan Sistem – suku bunga dan aturan pinjaman.
-
-Backup Database – otomatis harian.
-
-## Project setup
+Jalankan ini di terminal:
 
 ```bash
-$ yarn install
+# 1. Masuk ke folder project
+cd ~/Documents/Koperasi/ksp/ksp-erp-modern
+
+# 2. Init git (jika belum)
+git init
+
+# 3. Buat .gitignore biar gak upload node_modules/cache
+echo "node_modules/
+.denopkg/
+.env
+*.env
+.DS_Store" > .gitignore
+
+# 4. Stage & Commit
+git add .
+git commit -m "feat: init KSP ERP Modern (Deno + Hono + Fresh + Tailwind + Supabase) 🚀"
+
+# 5. Buat repo di GitHub dulu (manual via web), lalu connect:
+git remote add origin https://github.com/USERNAME_KAMU/ksp-erp-modern.git
+
+# 6. Push ke main branch
+git branch -M main
+git push -u origin main
 ```
 
-## Compile and run the project
+✅ **Repo GitHub siap!** Sekarang tinggal taruh README di bawah ke file `README.md` di root project.
+
+---
+
+## 📝 2. `README.md` (Copy-Paste Ready)
+
+```markdown
+# 🏦 KSP ERP Modern
+
+> _Sistem Manajemen Koperasi Simpan Pinjaman yang kekinian, fast af, dan scalable!_ 🚀✨  
+> Dibuat dengan ❤️ buat anak magetan & seluruh KSP se-Indonesia.
+
+---
+
+## 🤖 Tech Stack
+
+| Layer                | Tech                  | Kenapa dipake?                                              |
+| -------------------- | --------------------- | ----------------------------------------------------------- |
+| 🟦 **Runtime**       | Deno 2.x              | No Node.js, secure by default, TypeScript native, fast boot |
+| 🔥 **Backend**       | Hono.js               | Lightweight, blazing routing, Zod validation built-in       |
+| 🍋 **Frontend**      | Fresh + Preact        | Islands architecture, SSR + CSR hybrid, zero build step     |
+| 🎨 **Styling**       | Tailwind CSS v3       | Utility-first, dark mode ready, responsive af               |
+| 🗄️ **Database**      | Supabase (PostgreSQL) | Managed, free tier, real-time ready                         |
+| **ORM**              | Drizzle ORM           | Type-safe, lightweight, query builder yang intuitif         |
+| 📱 **Notifications** | Fonnte WhatsApp API   | Gratis 100 msg/hari, auto-reminder H-7/H-3/Overdue          |
+| ✅ **Validation**    | Zod                   | Runtime type safety, error message yang readable            |
+
+> 💡 _Note: Awalnya niat pake SvelteKit, tapi karena Deno + Vite compatibility masih "beta vibes", kita switch ke Fresh (Preact) yang 100% Deno-native & production-ready. Same vibe, better performance._ 🧠
+
+---
+
+## ✨ Features (MVP)
+
+- 👥 **Manajemen Anggota** → CRUD, search real-time, filter kota/status, pagination
+- 💾 **Simpanan** → Pokok, Wajib, Sukarela (auto-calc total)
+- 💰 **Pinjaman** → Ajukan → Approve → Jadwal Angsuran → Bayar → Lunas
+- 📊 **Laporan Real-time** → Dashboard stats, export CSV, filter dinamis
+- 🔔 **Notifikasi WhatsApp** → Auto-reminder H-7, H-3, H-0, & Overdue (contextual template)
+- 🌓 **Dark/Light Mode** → Seamless switch, localStorage persistent, no flash
+- 📱 **Responsive Layout** → Collapsible sidebar, dynamic width, mobile-first
+- 🔐 **Role-Based Access** → Karyawan vs Owner (UI conditional rendering)
+
+---
+
+## 🗂️ Project Structure
+```
+
+ksp-erp-modern/
+├── backend/ # 🟦 Deno + Hono + Drizzle
+│ ├── src/
+│ │ ├── main.ts # API routes & validation
+│ │ └── schema.ts # Database schema & relations
+│ ├── .env # Supabase URL + Fonnte Token
+│ └── deno.json
+├── frontend/ # 🍋 Fresh + Preact + Tailwind
+│ ├── islands/ # ⚡ Interactive components (useState/useEffect)
+│ ├── routes/ # 📄 Pages (SSR/static)
+│ ├── components/ # 🧩 Reusable UI (Layout, Navbar, etc)
+│ └── deno.json
+├── .gitignore
+└── README.md # 📖 You're here!
+
+````
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone & Setup
+```bash
+git clone https://github.com/USERNAME_KAMU/ksp-erp-modern.git
+cd ksp-erp-modern
+````
+
+### 2. Backend 🟦
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+cd backend
+cp .env.example .env  # Copy template
+# Edit .env → isi DATABASE_URL & FONNTE_TOKEN
+deno run --allow-net --allow-env --allow-read --env-file=.env src/main.ts
 ```
 
-## Run tests
+🔥 Backend running di `http://localhost:3000`
+
+### 3. Frontend 🍋
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+cd frontend
+deno install          # Install dependencies
+deno task start       # Dev server with hot reload
 ```
 
-## Deployment
+🌐 Frontend running di `http://localhost:8000`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🌍 Environment Variables
+
+Buat file `.env` di folder `backend/`:
+
+```env
+# Supabase PostgreSQL Connection
+DATABASE_URL=postgresql://postgres.xxxxx:your_password@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+
+# WhatsApp Gateway (Fonnte)
+FONNTE_TOKEN=your_fonnte_api_token_here
+```
+
+> 🔒 Jangan commit `.env` ke GitHub! Udah di-handle `.gitignore`.
+
+---
+
+## 📡 API Endpoints
+
+| Method  | Endpoint                   | Deskripsi                                            |
+| ------- | -------------------------- | ---------------------------------------------------- |
+| `GET`   | `/members`                 | List semua anggota + relasi simpanan & pinjaman      |
+| `POST`  | `/members`                 | Tambah anggota baru (auto-generate `KSP-2026-XXX`)   |
+| `GET`   | `/savings/:memberId`       | Rekap simpanan per anggota                           |
+| `POST`  | `/savings`                 | Catat setoran simpanan                               |
+| `GET`   | `/loans`                   | List pinjaman + anggota + angsuran                   |
+| `POST`  | `/loans`                   | Ajukan pinjaman baru (auto-calc bunga & jadwal)      |
+| `PATCH` | `/loans/:id/approve`       | Approve pinjaman → aktifkan angsuran                 |
+| `PATCH` | `/installments/:id/pay`    | Tandai angsuran lunas → update sisa pinjaman         |
+| `GET`   | `/reports/dashboard`       | Stats: anggota aktif, total simpanan, pinjaman, sisa |
+| `GET`   | `/reports/savings-summary` | Rekap simpanan per anggota                           |
+| `GET`   | `/reports/loans-active`    | Pinjaman aktif + progress angsuran                   |
+| `POST`  | `/api/send-whatsapp`       | Kirim notifikasi WA (Fonnte / fallback wa.me)        |
+
+---
+
+## Deployment Guide
+
+### Backend (Deno)
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# Option 1: Deno Deploy (Gratis & Global CDN)
+deno deploy backend/src/main.ts --project ksp-erp-api
+
+# Option 2: VPS / Ubuntu
+sudo apt install deno
+nohup deno run --allow-net --allow-env --allow-read --env-file=.env backend/src/main.ts &
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Frontend (Fresh)
 
-## Resources
+```bash
+# Deno Deploy (Auto-build)
+deno deploy frontend/ --project ksp-erp-ui
 
-Check out a few resources that may come in handy when working with NestJS:
+# Netlify / Vercel
+# Upload folder frontend/ → auto-detect Fresh framework
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Database
 
-## Support
+Supabase udah managed, tinggal copy `DATABASE_URL` ke production env. Backup otomatis tiap hari. ✅
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## 🧪 Testing & QA Notes
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- ✅ Validasi input pakai Zod (backend + frontend sync)
+- ✅ Error handling global + toast/alert user-friendly
+- ✅ Dark mode konsisten di semua island & route
+- ✅ Sidebar state persistent via localStorage
+- ✅ WhatsApp fallback ke `wa.me` kalau API limit/error
+- 📝 Test flow: Login → Dashboard → Anggota → Pinjaman → Approve → Bayar → Laporan
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-=======
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## 🤝 Contributing
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mau kolab? Pull request welcome! Ikut vibe:
 
-## About Laravel
+- 🧹 Clean code + TypeScript strict
+- 🎨 UI konsisten Tailwind utility
+- 📝 Commit message conventional (`feat:`, `fix:`, `chore:`)
+- 💬 Diskusi dulu di Issues kalau mau tambah fitur besar
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📜 License
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+MIT License. Bebas dipake buat belajar, proyek kampus, atau produksi KSP beneran. Jangan lupa kasih credit & star repo ya! 🙏✨
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+> Dibuat dengan ☕, , & sedikit ☀️ pagi oleh **Jefry Kurniawan** • 2026  
+> _Code is poetry, but ERP is survival._ 💼📈
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
->>>>>>> d67fd2c9afdb25f23fc7ea10c4e55d3144c5d4d8
+---
+```

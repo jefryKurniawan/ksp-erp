@@ -1,0 +1,22 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-env --allow-read src/main.ts",
+    "start": "deno run --allow-net --allow-env --allow-read src/main.ts",
+    "db:generate": "deno run -A --node-modules-dir npm:drizzle-kit generate",
+    "db:push": "deno run -A --node-modules-dir npm:drizzle-kit push"
+  },
+  "imports": {
+    "hono": "npm:hono@4",
+    "@hono/zod-validator": "npm:@hono/zod-validator@0.4",
+    "drizzle-orm": "npm:drizzle-orm@0.39",
+    "postgres": "npm:postgres@3.4",
+    "zod": "npm:zod@3",
+    "dotenv": "npm:dotenv@16"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.ns", "dom"],
+    "types": ["node"]
+  },
+  "nodeModulesDir": "auto"
+}
