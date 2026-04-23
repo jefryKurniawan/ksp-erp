@@ -33,9 +33,9 @@ export default function LandingPage() {
                 <a href="/login" class="px-4 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 rounded-lg transition">
                   Login
                 </a>
-                <a href="/dashboard" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                {/* <a href="/dashboard" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
                   Dashboard
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

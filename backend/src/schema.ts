@@ -1,11 +1,3 @@
-// import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
-
-// export const users = pgTable('users', {
-//   id: serial('id').primaryKey(),
-//   fullName: text('full_name'),
-//   phone: varchar('phone', { length: 256 }),
-// });
-
 import { 
   pgTable, 
   serial, 
@@ -25,52 +17,62 @@ export const savingsTypeEnum = pgEnum("savings_type", ["pokok", "wajib", "sukare
 export const loanStatusEnum = pgEnum("loan_status", ["pending", "approved", "rejected", "paid"]);
 export const installmentStatusEnum = pgEnum("installment_status", ["pending", "paid", "overdue"]);
 
-// 1. MEMBERS (Anggota)
+// 1. MEMBERS
 export const members = pgTable("members", {
   id: uuid("id").defaultRandom().primaryKey(),
-  memberNumber: text("member_number").unique().notNull(), // KSP-2026-001
+  memberNumber: text("member_number").unique().notNull(),
   fullName: text("full_name").notNull(),
   email: text("email").unique(),
   phone: text("phone").notNull(),
   address: text("address").notNull(),
-  city: text("city").default("Magetan"), // Default Magetan
-  idCard: text("id_card").unique(), // NIK
+  city: text("city").default("Magetan"),
+  idCard: text("id_card").unique(),
   joinedDate: date("joined_date").defaultNow(),
   status: memberStatusEnum("status").default("active"),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
-// 2. SAVINGS (Simpanan)
+// Buat tabel sync_log 
+export const syncLog = pgTable("sync_log", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  idempotencyKey: text("idempotency_key").unique().notNull(),
+  endpoint: text("endpoint").notNull(),
+  syncedAt: timestamp("synced_at", { withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+// 2. SAVINGS
 export const savings = pgTable("savings", {
   id: serial("id").primaryKey(),
   memberId: uuid("member_id").references(() => members.id).notNull(),
-  type: savingsTypeEnum("type").notNull(), // pokok/wajib/sukarela
+  type: savingsTypeEnum("type").notNull(),
   amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
   transactionDate: date("transaction_date").defaultNow().notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// 3. LOANS (Pinjaman)
+// 3. LOANS
 export const loans = pgTable("loans", {
   id: serial("id").primaryKey(),
   memberId: uuid("member_id").references(() => members.id).notNull(),
-  loanNumber: text("loan_number").unique().notNull(), // PJM-2026-001
+  loanNumber: text("loan_number").unique().notNull(),
   principal: numeric("principal", { precision: 12, scale: 2 }).notNull(),
-  interestRate: numeric("interest_rate", { precision: 5, scale: 2 }).default("12.00"), // Default 12% per tahun
-  tenorMonths: integer("tenor_months").notNull(), // Jangka waktu (bulan)
-  totalAmount: numeric("total_amount", { precision: 12, scale: 2 }).notNull(), // Pokok + Bunga
-  remaining: numeric("remaining", { precision: 12, scale: 2 }).notNull(), // Sisa pinjaman
+  interestRate: numeric("interest_rate", { precision: 5, scale: 2 }).default("12.00"),
+  tenorMonths: integer("tenor_months").notNull(),
+  totalAmount: numeric("total_amount", { precision: 12, scale: 2 }).notNull(),
+  remaining: numeric("remaining", { precision: 12, scale: 2 }).notNull(),
   status: loanStatusEnum("status").default("pending"),
   approvedDate: date("approved_date"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// 4. INSTALLMENTS (Angsuran)
+// 4. INSTALLMENTS
 export const installments = pgTable("installments", {
   id: serial("id").primaryKey(),
   loanId: integer("loan_id").references(() => loans.id).notNull(),
-  installmentNumber: integer("installment_number").notNull(), // Angsuran ke-
+  installmentNumber: integer("installment_number").notNull(),
   amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
   dueDate: date("due_date").notNull(),
   paidDate: date("paid_date"),
@@ -105,3 +107,4 @@ export const installmentsRelations = relations(installments, ({ one }) => ({
     references: [loans.id],
   }),
 }));
+

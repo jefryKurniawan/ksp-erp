@@ -7,11 +7,9 @@ export default function NavbarActions() {
   const [user, setUser] = useState<{name: string; role: 'karyawan' | 'owner'} | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Load theme & user on mount (client-side only)
   useEffect(() => {
     setMounted(true);
     
-    // Dark mode
     const savedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const isDark = savedTheme === "dark" || (!savedTheme && prefersDark);
@@ -21,7 +19,6 @@ export default function NavbarActions() {
       setDarkMode(true);
     }
 
-    // User session
     const savedUser = localStorage.getItem("ksp_user");
     if (savedUser) {
       try {
@@ -45,9 +42,8 @@ export default function NavbarActions() {
     window.location.href = "/login";
   };
 
-  // Prevent hydration mismatch
   if (!mounted) {
-    return <div class="w-32"></div>; // Placeholder dengan ukuran yang sama
+    return <div class="w-32"></div>;
   }
 
   return (

@@ -21,11 +21,13 @@ import * as $LandingFeatures from "./islands/LandingFeatures.tsx";
 import * as $LandingHero from "./islands/LandingHero.tsx";
 import * as $LandingStats from "./islands/LandingStats.tsx";
 import * as $LandingTestimonials from "./islands/LandingTestimonials.tsx";
+import * as $LayoutWrapper from "./islands/LayoutWrapper.tsx";
 import * as $LoansTable from "./islands/LoansTable.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import * as $MemberForm from "./islands/MemberForm.tsx";
 import * as $MembersTable from "./islands/MembersTable.tsx";
 import * as $NavbarActions from "./islands/NavbarActions.tsx";
+import * as $OfflineSync from "./islands/OfflineSync.tsx";
 import * as $ReportsContent from "./islands/ReportsContent.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
 import * as $ThemeToggle from "./islands/ThemeToggle.tsx";
@@ -54,11 +56,13 @@ const manifest = {
     "./islands/LandingHero.tsx": $LandingHero,
     "./islands/LandingStats.tsx": $LandingStats,
     "./islands/LandingTestimonials.tsx": $LandingTestimonials,
+    "./islands/LayoutWrapper.tsx": $LayoutWrapper,
     "./islands/LoansTable.tsx": $LoansTable,
     "./islands/LoginForm.tsx": $LoginForm,
     "./islands/MemberForm.tsx": $MemberForm,
     "./islands/MembersTable.tsx": $MembersTable,
     "./islands/NavbarActions.tsx": $NavbarActions,
+    "./islands/OfflineSync.tsx": $OfflineSync,
     "./islands/ReportsContent.tsx": $ReportsContent,
     "./islands/Sidebar.tsx": $Sidebar,
     "./islands/ThemeToggle.tsx": $ThemeToggle,

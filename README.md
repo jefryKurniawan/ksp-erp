@@ -522,6 +522,64 @@ Cukup copy `DATABASE_URL` ke environment variable di platform deployment.
 
 ---
 
+## 📸 Screenshots
+
+### 🏠 Dashboard
+
+![Dashboard](screenshot/Dashboard-KSP-ERP.png)
+_Overview statistik koperasi real-time: total anggota, simpanan, pinjaman, dan aktivitas terbaru._
+
+---
+
+### 🔐 Login
+
+![Login](screenshot/Login-KSP-ERP.png)
+_Halaman login dengan autentikasi berbasis role (Karyawan/Owner)._
+
+---
+
+### 👥 Manajemen Anggota
+
+![Manajemen Anggota](screenshot/Manajemen-Anggota-KSP-ERP.png)
+_Kelola data anggota: tambah, edit, hapus, pencarian real-time, filter kota & status._
+
+---
+
+### 💾 Manajemen Simpanan
+
+![Simpanan](screenshot/Simpanan-KSP-ERP.png)
+_Catat dan rekap simpanan anggota (Pokok, Wajib, Sukarela) dengan total otomatis._
+
+---
+
+### 💰 Manajemen Pinjaman
+
+![Pinjaman](screenshot/Manajemen-Pinjaman-KSP-ERP.png)
+_Ajukan pinjaman, approval workflow, jadwal angsuran otomatis, tracking pembayaran._
+
+---
+
+### 📊 Laporan
+
+![Laporan](screenshot/KSP-ERP-Laporan.png)
+_Laporan keuangan: rekap simpanan, pinjaman aktif, export CSV untuk laporan bulanan._
+
+---
+
+### ⚙️ Pengaturan
+
+![Pengaturan](screenshot/Pengaturan-KSP-ERP.png)
+_Konfigurasi sistem: profil koperasi, pengaturan WhatsApp API, backup data._
+
+---
+
+### 📱 Responsive Design
+
+![Responsive](screenshot/KSP-ERP-Sistem-Manajemen-Koperasi-M...)
+_Tampilan optimal di desktop, tablet, dan mobile dengan dark mode support._
+
+---
+
 ## Contributing
 
 Silakan kirim pull request untuk perbaikan atau fitur baru. Guidelines:

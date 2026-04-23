@@ -34,10 +34,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "lib": ["dom", "dom.iterable", "deno.ns"],
-    "strict": false,
-    "noEmit": true,
-    "allowImportingTsExtensions": true
+    "lib": ["dom", "dom.iterable", "deno.ns"]
+  
 
   },
   "nodeModulesDir": "auto"

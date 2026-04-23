@@ -11,12 +11,22 @@ import {
   memberStatusEnum,
   savingsTypeEnum,
   loanStatusEnum,
-  installmentStatusEnum
+  installmentStatusEnum, syncLog
 } from "./schema.ts";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { load } from "jsr:@std/dotenv";
-import { eq, and, or } from "drizzle-orm";
+import { eq, and, or, sql as drizzleSql } from "drizzle-orm";
+
+// hybrid
+interface SyncRecord {
+  id: string;
+  table_name: string;
+  operation: 'INSERT' | 'UPDATE' | 'DELETE';
+  record_id?: string;
+  payload: any;
+  idempotency_key: string;
+}
 
 await load({ export: true });
 
@@ -33,6 +43,116 @@ app.get("/", (c) => c.json({
   message: "🚀 KSP ERP API Running!",
   timestamp: new Date().toISOString()
 }));
+
+// Endpoint batch sync untuk offline data
+app.post("/api/sync", async (c) => {
+  const records: SyncRecord[] = await c.req.json();
+  const results = [];
+  
+  for (const record of records) {
+    try {
+      // Cek idempotency - prevent duplikasi
+      const existingSync = await db.select()
+        .from(syncLog)
+        .where(eq(syncLog.idempotencyKey, record.idempotency_key))
+        .limit(1);
+      
+      if (existingSync.length > 0) {
+        results.push({ 
+          id: record.id, 
+          status: "skipped", 
+          message: "Already synced",
+          data: existingSync[0] 
+        });
+        continue;
+      }
+      
+      let result;
+      
+      // Proses berdasarkan tabel dan operasi
+      switch (record.table_name) {
+        case 'members':
+          if (record.operation === 'INSERT') {
+            [result] = await db.insert(members).values(record.payload).returning();
+          } else if (record.operation === 'UPDATE' && record.record_id) {
+            [result] = await db.update(members)
+              .set(record.payload)
+              .where(eq(members.id, record.record_id))
+              .returning();
+          }
+          break;
+          
+        case 'savings':
+          if (record.operation === 'INSERT') {
+            [result] = await db.insert(savings).values(record.payload).returning();
+          }
+          break;
+          
+        case 'installments':
+          if (record.operation === 'UPDATE' && record.record_id) {
+            const installmentId = parseInt(record.record_id);
+            [result] = await db.update(installments)
+              .set(record.payload)
+              .where(eq(installments.id, installmentId))
+              .returning();
+            
+            // Update remaining loan jika bayar angsuran
+            if (record.payload.status === 'paid' && record.payload.paid_date) {
+              const installment = result;
+              await drizzleSql`
+                UPDATE loans 
+                SET remaining = remaining - ${installment.amount}
+                WHERE id = ${installment.loanId}
+              `;
+            }
+          }
+          break;
+      }
+      
+      // Log sync sukses
+      if (result) {
+        await db.insert(syncLog).values({
+          idempotencyKey: record.idempotency_key,
+          tableName: record.table_name,
+          operation: record.operation,
+          recordId: record.record_id || null,
+          payload: record.payload,
+          syncedAt: new Date(),
+        });
+        
+        results.push({ 
+          id: record.id, 
+          status: "success", 
+          data: result 
+        });
+      }
+    } catch (error: any) {
+      console.error(`Sync failed for ${record.table_name}:`, error);
+      results.push({ 
+        id: record.id, 
+        status: "failed", 
+        error: error.message 
+      });
+    }
+  }
+  
+  return c.json({ success: true, results });
+});
+
+// Endpoint untuk get pending sync status (optional - untuk monitoring)
+app.get("/api/sync/status", async (c) => {
+  const pendingCount = await db.select({ count: drizzleSql<number>`count(*)` })
+    .from(syncLog)
+    .then(r => r[0].count);
+  
+  return c.json({ 
+    success: true, 
+    data: {
+      pendingSyncs: pendingCount,
+      lastSync: new Date().toISOString()
+    } 
+  });
+});
 
 // GET all users
 app.get("/users", async (c) => {
@@ -93,13 +213,24 @@ app.get("/members", async (c) => {
 });
 
 // CREATE member
-const createMemberSchema = z.object({
+export const createMemberSchema = z.object({
   fullName: z.string().min(2),
   email: z.string().email().optional(),
   phone: z.string(),
   address: z.string(),
   city: z.string().default("Magetan"),
   idCard: z.string().optional(),
+});
+
+// Update Member (semua field optional)
+export const updateMemberSchema = z.object({
+  fullName: z.string().min(2).optional(),
+  email: z.string().email().optional().or(z.literal("")),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  idCard: z.string().optional().or(z.literal("")),
+  status: z.enum(["active", "inactive"]).optional(),
 });
 
 app.post("/members", zValidator("json", createMemberSchema), async (c) => {
@@ -156,7 +287,7 @@ app.get("/savings/:memberId", async (c) => {
 });
 
 // CREATE savings
-const createSavingsSchema = z.object({
+export const createSavingsSchema = z.object({
   memberId: z.string().uuid(),
   type: z.enum(["pokok", "wajib", "sukarela"]),
   amount: z.string(),
@@ -210,7 +341,7 @@ app.get("/loans", async (c) => {
 });
 
 // CREATE loan dengan perhitungan bunga
-const createLoanSchema = z.object({
+export const createLoanSchema = z.object({
   memberId: z.string().uuid(),
   principal: z.string(),
   interestRate: z.string().default("12.00"),
@@ -218,7 +349,7 @@ const createLoanSchema = z.object({
 });
 
 // Schema untuk bayar angsuran
-const payInstallmentSchema = z.object({
+export const payInstallmentSchema = z.object({
   paidDate: z.string(),
 });
 
@@ -290,6 +421,31 @@ app.patch("/loans/:id/approve", async (c) => {
   }
 });
 
+// UPDATE member
+app.patch("/members/:id", zValidator("json", updateMemberSchema), async (c) => {
+  try {
+    const id = c.req.param("id");
+    const body = c.req.valid("json");
+    
+    const [updatedMember] = await db.update(members)
+      .set({ 
+        ...body,
+        updatedAt: new Date().toISOString()
+      })
+      .where(eq(members.id, id))
+      .returning();
+    
+    if (!updatedMember) {
+      return c.json({ success: false, error: "Member not found" }, 404);
+    }
+    
+    return c.json({ success: true,  updatedMember });
+  } catch (error: any) {
+    console.error("Update member error:", error);
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
 // PAY installment - FIX (hanya SATU definisi)
 app.patch("/installments/:id/pay", zValidator("json", payInstallmentSchema), async (c) => {
   try {
@@ -314,7 +470,7 @@ app.patch("/installments/:id/pay", zValidator("json", payInstallmentSchema), asy
       .where((i, { eq }) => eq(i.id, id));
     
     // 3. Update remaining loan dengan raw SQL (lebih reliable)
-    await sql`
+    await drizzleSql`
       UPDATE loans 
       SET remaining = remaining - ${installment.amount}
       WHERE id = ${installment.loanId}
@@ -420,40 +576,37 @@ app.get("/reports/loans-active", async (c) => {
   }
 });
 
-// Dashboard Statistics - FINAL FIX (Raw SQL for reliability)
+// Dashboard Statistics
 app.get("/reports/dashboard", async (c) => {
   try {
-    // ✅ Gunakan raw SQL untuk query yang lebih reliable
-    const activeMembers = await sql`
-      SELECT COUNT(*) as count FROM members WHERE status = 'active'
-    `;
+    const activeMembers = await drizzleSql`SELECT COUNT(*) as count FROM members WHERE status = 'active'`;
+    const savingsData = await drizzleSql`SELECT amount FROM savings`;
+    const approvedLoans = await drizzleSql`SELECT total_amount, remaining, status FROM loans WHERE status = 'approved'`;
     
-    const allSavings = await sql`SELECT amount FROM savings`;
-    
-    const approvedLoans = await sql`
-      SELECT total_amount, remaining, status FROM loans WHERE status = 'approved'
-    `;
-    
-    // Calculate totals
-    const totalSimpanan = allSavings.reduce((sum, s) => sum + parseFloat(s.amount), 0);
-    const totalPinjamanDistribusi = approvedLoans.reduce((sum, l) => sum + parseFloat(l.total_amount), 0);
-    const totalSisaPinjaman = approvedLoans.reduce((sum, l) => sum + parseFloat(l.remaining), 0);
+    const totalSimpanan = savingsData.reduce((sum: number, s: any) => sum + parseFloat(s.amount), 0);
+    const totalPinjamanDistribusi = approvedLoans.reduce((sum: number, l: any) => sum + parseFloat(l.total_amount), 0);
+    const totalSisaPinjaman = approvedLoans.reduce((sum: number, l: any) => sum + parseFloat(l.remaining), 0);
     const totalPinjamanLunas = approvedLoans.filter((l: any) => l.status === "paid").length;
     
     return c.json({
       success: true,
-      data: {  // ✅ Tambahkan "data:" sebelum opening brace
+      data: {
         totalAnggotaAktif: parseInt(activeMembers[0].count),
-        totalSimpanan: totalSimpanan,
-        totalPinjamanDistribusi: totalPinjamanDistribusi,
-        totalSisaPinjaman: totalSisaPinjaman,
-        totalPinjamanLunas: totalPinjamanLunas
+        totalSimpanan,
+        totalPinjamanDistribusi,
+        totalSisaPinjaman,
+        totalPinjamanLunas
       }
     });
   } catch (error: any) {
     console.error("Dashboard error:", error);
     return c.json({ success: false, error: error.message }, 500);
   }
+});
+
+export const sendWhatsAppSchema = z.object({
+  phone: z.string().min(10, "Nomor WhatsApp tidak valid"),
+  message: z.string().min(1, "Pesan tidak boleh kosong"),
 });
 
 // WhatsApp Notification Endpoint (Fonnte Integration)
